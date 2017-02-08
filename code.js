@@ -2,8 +2,10 @@
 // this is just a stub for a function you need to implement
 //
 function getStats(txt) {
+    let nChars = getNumberOfChars(txt)
+
     return {
-        nChars: 123,
+        nChars: nChars,
         nWords: 22,
         nLines: 10,
         nNonEmptyLines: 22,
@@ -15,3 +17,6 @@ function getStats(txt) {
     };
 }
 
+function getNumberOfChars(txt) {
+    return txt.length
+}
