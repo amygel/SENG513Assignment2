@@ -1,5 +1,6 @@
 //
 // this is just a stub for a function you need to implement
+// Hand in zip with 2 files inside
 //
 function getStats(txt) {
     let nChars = getNumberOfChars(txt)
@@ -20,35 +21,26 @@ function getStats(txt) {
     };
 }
 
-// Do new line characters count as chars
+// Ref tutorial
 function getNumberOfChars(txt) {
-    return txt.length
+    let re = /./g;
+
+    let arr = txt.match(re);
+    return arr.length;
 }
 
-// If you have a word with a dash is that one or two words, ex: x-ray
 function getNumberOfWords(txt) {
-    let count = 0
-    var arr;
+    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
 
-    var re = /([-A-Za-z0-9])+/g;
-
-    while ((arr = re.exec(txt)) !== null) {
-        count++;
-    }
-    return count
+    let arr = txt.match(re);
+    return arr.length;
 }
 
-// What if you have a super long text that doesn't hit return but goes down into multiple lines
 function getNumberOfLines(txt) {
-    let count = 0
-    var arr;
+    let re = /([\n])/g;
 
-    var re = /([\n])/g;
-
-    while ((arr = re.exec(txt)) !== null) {
-        count++;
-    }
-    return count
+    let arr = txt.exec(re);
+    return arr.length;
 }
 
 function getAveWordLength(txt) {
@@ -56,12 +48,12 @@ function getAveWordLength(txt) {
     let sum = 0
     var arr;
 
-    var re = /([-A-Za-z0-9])+/g;
+    var re = /([-A-Za-z\d])+/g;
 
     while ((arr = re.exec(txt)) !== null) {
         sum+=arr[0].length
         count++;
     }
-    return sum/count
+    return sum/count;
 }
 
