@@ -46,9 +46,9 @@ function getNumberOfLines(txt) {
 function getAveWordLength(txt) {
     let count = 0
     let sum = 0
-    var arr;
+    let arr;
 
-    var re = /([-A-Za-z\d])+/g;
+    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
 
     while ((arr = re.exec(txt)) !== null) {
         sum+=arr[0].length
