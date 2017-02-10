@@ -10,6 +10,7 @@ function getStats(txt) {
     let aveWordLen = getAveWordLength(txt);
     let maxLineLength = getMaxLineLength(txt);
     let palindromes = getPalindromes(txt);
+    let longestWords = getLongestWords(txt);
 
     return {
         nChars: nChars,
@@ -19,7 +20,7 @@ function getStats(txt) {
         averageWordLength: aveWordLen,
         maxLineLength: maxLineLength,
         palindromes: palindromes,
-        longestWords: ["xxxxxxxxx", "123444444"],
+        longestWords: longestWords,
         mostFrequentWords: [ "hello(7)", "world(1)" ]
     };
 }
@@ -117,7 +118,7 @@ function getMaxLineLength(txt) {
     }
 
     let max = 0;
-
+    let line;
     let lines = txt.split("\n");
 
     for (line of lines) {
@@ -136,11 +137,10 @@ function getPalindromes(txt) {
     }
 
     let palindromes = [];
-    let arr;
     let word;
     let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
 
-    arr = txt.match(re);
+    let arr = txt.match(re);
     for (word of arr) {
         if (word.length > 2) {
             let reverse = reverseString(word);
@@ -155,11 +155,32 @@ function getPalindromes(txt) {
 
 //https://medium.freecodecamp.com/how-to-reverse-a-string-in-javascript-in-3-different-ways-75e4763c68cb#.nnzsan6oy
 function reverseString(txt) {
-    var splitString = txt.split("");
+    let splitString = txt.split("");
 
-    var reverseArray = splitString.reverse();
+    let reverseArray = splitString.reverse();
 
-    var joinArray = reverseArray.join("");
+    let joinArray = reverseArray.join("");
 
     return joinArray;
+}
+
+// Longest include duplicates?
+function getLongestWords(txt) {
+    if (!txt){
+        return [];
+    }
+
+    let longestList = [];
+    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
+    let longest;
+    let arr = txt.match(re);
+    for (let i = 0; arr.length > 0 && i < 10; i++) {
+        // http://stackoverflow.com/questions/6521245/finding-longest-string-in-array
+        longest = arr.reduce(function (a, b) { return a.length > b.length ? a : b; });
+        let index = arr.indexOf(longest);
+        arr.splice(index, 1);
+        longestList.push(longest);
+    }
+
+    return  longestList;
 }
