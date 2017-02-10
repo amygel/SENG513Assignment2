@@ -5,14 +5,15 @@
 function getStats(txt) {
     let nChars = getNumberOfChars(txt)
     let nWords = getNumberOfWords(txt)
-    //let nLines = getNumberOfLines(txt)
+    let nLines = getNumberOfLines(txt)
+    let nNonEmptyLines = getNumberOfNonEmptyLines(txt)
     let aveWordLen = getAveWordLength(txt)
 
     return {
         nChars: nChars,
         nWords: nWords,
-        nLines: 0,
-        nNonEmptyLines: 22,
+        nLines: nLines,
+        nNonEmptyLines: nNonEmptyLines,
         averageWordLength: aveWordLen,
         maxLineLength: 33,
         palindromes: ["12321", "kayak", "mom"],
@@ -23,6 +24,10 @@ function getStats(txt) {
 
 // Ref tutorial
 function getNumberOfChars(txt) {
+    if (!txt){
+        return 0;
+    }
+
     let re = /./g;
 
     let arr = txt.match(re);
@@ -30,6 +35,10 @@ function getNumberOfChars(txt) {
 }
 
 function getNumberOfWords(txt) {
+    if (!txt){
+        return 0;
+    }
+
     let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
 
     let arr = txt.match(re);
@@ -37,13 +46,57 @@ function getNumberOfWords(txt) {
 }
 
 function getNumberOfLines(txt) {
+    if (!txt){
+        return 0;
+    }
+
+    let count = 0;
     let re = /([\n])/g;
 
-    let arr = txt.exec(re);
-    return arr.length;
+    let arr = txt.match(re);
+    if (arr) {
+        count = arr.length;
+    }
+
+    let lastLine = getLastLine(txt);
+    if (lastLine) {
+        count++;
+    }
+
+    return count;
 }
 
+function getLastLine(txt) {
+    if(txt.lastIndexOf("\n")>0) {
+        return txt.substring(txt.lastIndexOf("\n"), txt.length + 1);
+    } else {
+        return txt;
+    }
+}
+
+function getNumberOfNonEmptyLines(txt) {
+    if (!txt){
+        return 0;
+    }
+
+    let numLines = getNumberOfLines(txt);
+
+    let re = /(^\s*$)/gm;
+
+    let arr = txt.match(re);
+    if (arr) {
+        return numLines - arr.length;
+    }
+
+    return numLines;
+}
+
+
 function getAveWordLength(txt) {
+    if (!txt){
+        return 0;
+    }
+
     let count = 0
     let sum = 0
     let arr;
