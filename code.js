@@ -3,11 +3,12 @@
 // Hand in zip with 2 files inside
 //
 function getStats(txt) {
-    let nChars = getNumberOfChars(txt)
-    let nWords = getNumberOfWords(txt)
-    let nLines = getNumberOfLines(txt)
-    let nNonEmptyLines = getNumberOfNonEmptyLines(txt)
-    let aveWordLen = getAveWordLength(txt)
+    let nChars = getNumberOfChars(txt);
+    let nWords = getNumberOfWords(txt);
+    let nLines = getNumberOfLines(txt);
+    let nNonEmptyLines = getNumberOfNonEmptyLines(txt);
+    let aveWordLen = getAveWordLength(txt);
+    let maxLineLength = getMaxLineLength(txt);
 
     return {
         nChars: nChars,
@@ -15,7 +16,7 @@ function getStats(txt) {
         nLines: nLines,
         nNonEmptyLines: nNonEmptyLines,
         averageWordLength: aveWordLen,
-        maxLineLength: 33,
+        maxLineLength: maxLineLength,
         palindromes: ["12321", "kayak", "mom"],
         longestWords: ["xxxxxxxxx", "123444444"],
         mostFrequentWords: [ "hello(7)", "world(1)" ]
@@ -91,22 +92,35 @@ function getNumberOfNonEmptyLines(txt) {
     return numLines;
 }
 
-
 function getAveWordLength(txt) {
     if (!txt){
         return 0;
     }
 
-    let count = 0
-    let sum = 0
+    let count = 0;
+    let sum = 0;
     let arr;
 
     let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
 
     while ((arr = re.exec(txt)) !== null) {
-        sum+=arr[0].length
+        sum+=arr[0].length;
         count++;
     }
     return sum/count;
 }
 
+function getMaxLineLength(txt) {
+    let max = 0;
+
+    let lines = txt.split("\n");
+
+    for (line of lines) {
+        let count = getNumberOfChars(line);
+        if(count > max) {
+            max = count;
+        }
+    }
+
+    return max;
+}
