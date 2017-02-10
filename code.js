@@ -11,6 +11,7 @@ function getStats(txt) {
     let maxLineLength = getMaxLineLength(txt);
     let palindromes = getPalindromes(txt);
     let longestWords = getLongestWords(txt);
+    let mostFrequentWords = getMostFrequentWords(txt);
 
     return {
         nChars: nChars,
@@ -21,7 +22,7 @@ function getStats(txt) {
         maxLineLength: maxLineLength,
         palindromes: palindromes,
         longestWords: longestWords,
-        mostFrequentWords: [ "hello(7)", "world(1)" ]
+        mostFrequentWords: mostFrequentWords
     };
 }
 
@@ -198,4 +199,25 @@ function getLongestWords(txt) {
     });
 
     return  longestList;
+}
+
+function getMostFrequentWords(txt) {
+    if (!txt){
+        return [];
+    }
+
+    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
+
+    let arr = txt.match(re);
+    let mapArr = arr.map(function (a) {
+
+    });
+
+    let reduceArr = mapArr.reduce(function (a,b) {
+        
+    });
+
+    // Get first ten, concat with # occurences
+
+    return reduceArr;
 }
