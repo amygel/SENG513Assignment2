@@ -179,8 +179,23 @@ function getLongestWords(txt) {
         longest = arr.reduce(function (a, b) { return a.length > b.length ? a : b; });
         let index = arr.indexOf(longest);
         arr.splice(index, 1);
-        longestList.push(longest);
+        longestList.push(longest.toLowerCase());
     }
+
+    // http://stackoverflow.com/questions/6129952/javascript-sort-array-by-two-fields
+    longestList.sort(function (a,b) {
+        let aLength = a.length;
+        let bLength = b.length;
+
+        if(aLength == bLength)
+        {
+            return (a < b) ? -1 : (a > b) ? 1 : 0;
+        }
+        else
+        {
+            return (aLength > bLength) ? -1 : 1;
+        }
+    });
 
     return  longestList;
 }
