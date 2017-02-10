@@ -9,6 +9,7 @@ function getStats(txt) {
     let nNonEmptyLines = getNumberOfNonEmptyLines(txt);
     let aveWordLen = getAveWordLength(txt);
     let maxLineLength = getMaxLineLength(txt);
+    let palindromes = getPalindromes(txt);
 
     return {
         nChars: nChars,
@@ -17,7 +18,7 @@ function getStats(txt) {
         nNonEmptyLines: nNonEmptyLines,
         averageWordLength: aveWordLen,
         maxLineLength: maxLineLength,
-        palindromes: ["12321", "kayak", "mom"],
+        palindromes: palindromes,
         longestWords: ["xxxxxxxxx", "123444444"],
         mostFrequentWords: [ "hello(7)", "world(1)" ]
     };
@@ -111,6 +112,10 @@ function getAveWordLength(txt) {
 }
 
 function getMaxLineLength(txt) {
+    if (!txt){
+        return 0;
+    }
+
     let max = 0;
 
     let lines = txt.split("\n");
@@ -123,4 +128,38 @@ function getMaxLineLength(txt) {
     }
 
     return max;
+}
+
+function getPalindromes(txt) {
+    if (!txt){
+        return [];
+    }
+
+    let palindromes = [];
+    let arr;
+    let word;
+    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
+
+    arr = txt.match(re);
+    for (word of arr) {
+        if (word.length > 2) {
+            let reverse = reverseString(word);
+            if (reverse.toUpperCase() === word.toUpperCase()) {
+                palindromes.push(word);
+            }
+        }
+    }
+
+    return palindromes;
+}
+
+//https://medium.freecodecamp.com/how-to-reverse-a-string-in-javascript-in-3-different-ways-75e4763c68cb#.nnzsan6oy
+function reverseString(txt) {
+    var splitString = txt.split("");
+
+    var reverseArray = splitString.reverse();
+
+    var joinArray = reverseArray.join("");
+
+    return joinArray;
 }
