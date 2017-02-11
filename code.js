@@ -95,6 +95,7 @@ function getNumberOfNonEmptyLines(txt) {
     return numLines;
 }
 
+// Define words
 function getAveWordLength(txt) {
     if (!txt){
         return 0;
@@ -209,15 +210,32 @@ function getMostFrequentWords(txt) {
     let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
 
     let arr = txt.match(re);
-    let mapArr = arr.map(function (a) {
+    let wordCounts = {};
 
+    for (let i = 0; i < arr.length; i++) {
+        let word = arr[i].toLowerCase();
+        wordCounts[word] = (wordCounts[word] || 0) + 1;
+    }
+
+    let highestCounts = Object.keys(wordCounts).sort(function (a, b) {
+        let aValue = wordCounts[a];
+        let bValue = wordCounts[b];
+
+        if(aValue == bValue)
+        {
+            return (a < b) ? -1 : (a > b) ? 1 : 0;
+        }
+        else
+        {
+            return (aValue > bValue) ? -1 : 1;
+        }
     });
 
-    let reduceArr = mapArr.reduce(function (a,b) {
-        
-    });
+    let tenHighestCounts = [];
+    for (let i = 0; highestCounts.length != 0 && i < 10; i++) {
+        let word = highestCounts.shift();
+        tenHighestCounts[i] = word + "(" + wordCounts[word] + ")";
+    }
 
-    // Get first ten, concat with # occurences
-
-    return reduceArr;
+    return tenHighestCounts;
 }
