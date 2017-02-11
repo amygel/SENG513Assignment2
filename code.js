@@ -7,8 +7,8 @@ function getStats(txt) {
     let nWords = getNumberOfWords(txt);
     let nLines = getNumberOfLines(txt);
     let nNonEmptyLines = getNumberOfNonEmptyLines(txt);
-    let aveWordLen = getAveWordLength(txt);
     let maxLineLength = getMaxLineLength(txt);
+    let aveWordLen = getAveWordLength(txt);
     let palindromes = getPalindromes(txt);
     let longestWords = getLongestWords(txt);
     let mostFrequentWords = getMostFrequentWords(txt);
@@ -17,25 +17,17 @@ function getStats(txt) {
         nChars: nChars,
         nWords: nWords,
         nLines: nLines,
-        nNonEmptyLines: nNonEmptyLines,
-        averageWordLength: aveWordLen,
+        nonEmptyLines: nNonEmptyLines,
         maxLineLength: maxLineLength,
+        averageWordLength: aveWordLen,
         palindromes: palindromes,
         longestWords: longestWords,
         mostFrequentWords: mostFrequentWords
     };
 }
 
-// Ref tutorial
 function getNumberOfChars(txt) {
-    if (!txt){
-        return 0;
-    }
-
-    let re = /./g;
-
-    let arr = txt.match(re);
-    return arr.length;
+    return txt.length;
 }
 
 function getNumberOfWords(txt) {
@@ -43,7 +35,7 @@ function getNumberOfWords(txt) {
         return 0;
     }
 
-    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
+    let re = /([A-Z\d])+/ig;
 
     let arr = txt.match(re);
     return arr.length;
@@ -86,8 +78,8 @@ function getNumberOfNonEmptyLines(txt) {
     let numLines = getNumberOfLines(txt);
 
     let re = /(^\s*$)/gm;
-
     let arr = txt.match(re);
+
     if (arr) {
         return numLines - arr.length;
     }
@@ -95,7 +87,6 @@ function getNumberOfNonEmptyLines(txt) {
     return numLines;
 }
 
-// Define words
 function getAveWordLength(txt) {
     if (!txt){
         return 0;
@@ -105,7 +96,7 @@ function getAveWordLength(txt) {
     let sum = 0;
     let arr;
 
-    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
+    let re = /([A-Z\d])+/ig;
 
     while ((arr = re.exec(txt)) !== null) {
         sum+=arr[0].length;
@@ -140,14 +131,14 @@ function getPalindromes(txt) {
 
     let palindromes = [];
     let word;
-    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
+    let re = /([A-Z\d])+/ig;
 
     let arr = txt.match(re);
     for (word of arr) {
         if (word.length > 2) {
             let reverse = reverseString(word);
-            if (reverse.toUpperCase() === word.toUpperCase()) {
-                palindromes.push(word);
+            if (reverse.toLowerCase() === word.toLowerCase()) {
+                palindromes.push(word.toLowerCase());
             }
         }
     }
@@ -158,48 +149,48 @@ function getPalindromes(txt) {
 //https://medium.freecodecamp.com/how-to-reverse-a-string-in-javascript-in-3-different-ways-75e4763c68cb#.nnzsan6oy
 function reverseString(txt) {
     let splitString = txt.split("");
-
     let reverseArray = splitString.reverse();
-
     let joinArray = reverseArray.join("");
 
     return joinArray;
 }
 
-// Longest include duplicates?
 function getLongestWords(txt) {
     if (!txt){
         return [];
     }
 
-    let longestList = [];
-    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
-    let longest;
+    let re = /([A-Z\d])+/ig;
     let arr = txt.match(re);
-    for (let i = 0; arr.length > 0 && i < 10; i++) {
-        // http://stackoverflow.com/questions/6521245/finding-longest-string-in-array
-        longest = arr.reduce(function (a, b) { return a.length > b.length ? a : b; });
-        let index = arr.indexOf(longest);
-        arr.splice(index, 1);
-        longestList.push(longest.toLowerCase());
+    let wordLengths = {};
+
+    for (let i = 0; i < arr.length; i++) {
+        let word = arr[i].toLowerCase();
+        wordLengths[word] = word.length;
     }
 
     // http://stackoverflow.com/questions/6129952/javascript-sort-array-by-two-fields
-    longestList.sort(function (a,b) {
-        let aLength = a.length;
-        let bLength = b.length;
+    let largest = Object.keys(wordLengths).sort(function (a, b) {
+        let aValue = wordLengths[a];
+        let bValue = wordLengths[b];
 
-        if(aLength == bLength)
+        if(aValue == bValue)
         {
             return (a < b) ? -1 : (a > b) ? 1 : 0;
         }
         else
         {
-            return (aLength > bLength) ? -1 : 1;
+            return (aValue > bValue) ? -1 : 1;
         }
     });
 
-    return  longestList;
+    let tenLongest = [];
+    for (let i = 0; largest.length != 0 && i < 10; i++) {
+        let word = largest.shift();
+        tenLongest[i] = word;
+    }
+
+    return tenLongest;
 }
 
 function getMostFrequentWords(txt) {
@@ -207,16 +198,18 @@ function getMostFrequentWords(txt) {
         return [];
     }
 
-    let re = /([-'a-z\d-])([-'a-z\d])+|([a-z\d])/ig;
+    let re = /([A-Z\d])+/ig;
 
     let arr = txt.match(re);
     let wordCounts = {};
 
+    // http://stackoverflow.com/questions/6565333/using-javascript-to-find-most-common-words-in-string
     for (let i = 0; i < arr.length; i++) {
         let word = arr[i].toLowerCase();
         wordCounts[word] = (wordCounts[word] || 0) + 1;
     }
 
+    // http://stackoverflow.com/questions/6129952/javascript-sort-array-by-two-fields
     let highestCounts = Object.keys(wordCounts).sort(function (a, b) {
         let aValue = wordCounts[a];
         let bValue = wordCounts[b];
